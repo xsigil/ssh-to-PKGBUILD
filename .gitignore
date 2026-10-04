@@ -1,0 +1,5 @@
+/pkg/
+/src/
+/ssh-to/
+.pkg.tar.
+*.log

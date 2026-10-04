@@ -1,0 +1,32 @@
+# Maintainer: xsigil <xsigil@users.noreply.github.com>
+
+pkgname=ssh-to-git
+pkgver=r1.0000000
+pkgrel=1
+pkgdesc="Symlink-driven, transparent SSH shortcut manager (git master)"
+arch=('any')
+url="https://github.com/xsigil/ssh-to"
+license=('MIT')
+depends=('bash' 'openssh')
+makedepends=('git')
+provides=('ssh-to')
+conflicts=('ssh-to')
+source=("ssh-to::git+https://github.com/xsigil/ssh-to.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/ssh-to"
+    if git describe --long --tags >/dev/null 2>&1; then
+        git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    else
+        printf "r%s.g%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+    fi
+}
+
+package() {
+    cd "$srcdir/ssh-to"
+
+    install -Dm755 bin/ssh-to "$pkgdir/usr/bin/ssh-to"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+}
